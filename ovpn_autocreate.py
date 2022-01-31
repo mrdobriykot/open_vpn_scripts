@@ -67,7 +67,7 @@ def generate_config(ovpn_folder):
     env = Environment(loader=FileSystemLoader("."))
     templ = env.get_template("ovpn_template1.txt")
     for keys, values in crt_dict.items():
-        config = {"user_cert": values[0], "user_key": values[1], "ca": ca_ta[0], "tls": ca_ta[1]}
+        config = {"user_cert": values[0], "user_key": values[1], "ca": ca_ta[0], "ta": ca_ta[1]}
         userovpn = ovpn_folder + keys + '.ovpn'
         with open(userovpn, "w") as wf:
             wf.write(templ.render(config))
