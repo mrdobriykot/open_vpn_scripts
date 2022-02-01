@@ -2,14 +2,13 @@ import os
 import re
 from jinja2 import Environment, FileSystemLoader
 
-# TODO написать реализацию скрипта с cli интерфейсом
 
 
-cer_folder_address = "C:/repos/mrdobriykot/open_vpn/crt"
-keys_folder_address = "C:/repos/mrdobriykot/open_vpn/key"
-ovpn_path = "C:/repos/mrdobriykot/open_vpn/ovpn"
-ca_path = "C:/repos/mrdobriykot/open_vpn/ca/ca.crt"
-ta_path = "C:/repos/mrdobriykot/open_vpn/ta/ta.key"
+cer_folder_address = "/home/localadmin/easy-rsa/pki/issued/"
+keys_folder_address = "/home/localadmin/easy-rsa/pki/private/"
+ovpn_path = "/home/localadmin/ovpn/"
+ca_path = "/home/localadmin/key/ca.crt"
+ta_path = "/home/localadmin/key/ta.key"
 crt_dict = {}
 gen_files = []
 name_list = []
@@ -17,15 +16,15 @@ ca_ta = [] # ca.crt and tls-auth.key
 
 
 def cert(crt_folder_address):
-    regex = r"CN=(?P<u_name>\w+)/"
+    regex = r"(?P<u_name>\w+).crt"
     crt_regex = r"-+BEGIN CERTIFICATE-+\s(?P<crt>.+?)\s-+END CERTIFICATE-+"
     crt_list = [os.path.join(crt_folder_address, f) for f in os.listdir(crt_folder_address)]
     for file in crt_list:
-        with open(file) as f:
-            user_name = re.search(regex, f.read()).group("u_name")
-        with open(file) as f:
+        user_name = re.search(regex, file).group("u_name")
+        with open(file, "r") as f:
             user_crt = re.search(crt_regex, f.read(), re.DOTALL).group("crt")
             crt_dict[user_name] = [user_crt]
+
 
 
 def key(key_folder_address):
