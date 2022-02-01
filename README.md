@@ -1,1 +1,1 @@
-# open_vpn_scripts
+# Scripts for Open VPN automation
