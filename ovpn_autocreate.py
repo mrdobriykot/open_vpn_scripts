@@ -65,7 +65,7 @@ def ca_ta_add(ca_folder_address, ta_folder_address):
 def generate_config(ovpn_folder, crt_dict, ca_path, ta_path):
     ca_cer, ta_key = ca_ta_add(ca_path, ta_path)
     env = Environment(loader=FileSystemLoader("."))
-    templ = env.get_template("ovpn_template1.txt")
+    templ = env.get_template("ovpn_template.txt")
     for filename, (user_crt, user_key) in crt_dict.items():
         config = {"user_cert": user_crt, "user_key": user_key, "ca": ca_cer, "ta": ta_key}
         userovpn = os.path.join(ovpn_folder, filename + '.ovpn')
