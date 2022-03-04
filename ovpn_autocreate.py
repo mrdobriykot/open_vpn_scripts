@@ -18,17 +18,21 @@ log.addHandler(console)
 logfile = logging.FileHandler("ovpn_gen.log")
 logfile.setLevel(logging.DEBUG)
 file_formatter = logging.Formatter("{asctime} - {name} - {levelname} - {message}",
-                              style="{")
+                                   style="{")
 logfile.setFormatter(file_formatter)
 
 log.addHandler(logfile)
+
 
 def cert(crt_folder_address):
     log.debug(f"Start of certificate dictionary creation")
     crt_dict = {}
     regex = r"(?P<u_name>\w+)\.crt"
     crt_regex = r"-+BEGIN CERTIFICATE-+\s(?P<crt>.+?)\s-+END CERTIFICATE-+"
-    crt_list = [os.path.join(crt_folder_address, f) for f in os.listdir(crt_folder_address)]
+    crt_list = [os.path.join(crt_folder_address, f) for f in os.listdir(crt_folder_address)
+                if f.endswith(".crt")]
+    if len(crt_list) == 0:
+        raise Exception("User's certificate folder is empty or does not consist .crt files")
     for file in crt_list:
         user_name = re.search(regex, file).group("u_name")
         with open(file, "r") as f:
@@ -44,7 +48,10 @@ def key(key_folder_address):
     key_dict = {}
     filename_regex = r"(?P<u_name>\w+)\.key"
     key_regex = r"-+BEGIN PRIVATE KEY-+\s(?P<key>.+?)\s-+END PRIVATE KEY-+"
-    key_list = [os.path.join(key_folder_address, f) for f in os.listdir(key_folder_address)]
+    key_list = [os.path.join(key_folder_address, f) for f in os.listdir(key_folder_address)
+                if f.endswith(".key")]
+    if len(key_list) == 0:
+        raise Exception("User's key folder is empty or does not consist .key files")
     for file in key_list:
         filename = re.search(filename_regex, file).group("u_name")
         with open(file) as f:
