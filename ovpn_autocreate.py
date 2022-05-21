@@ -2,6 +2,10 @@ import os
 import re
 from jinja2 import Environment, FileSystemLoader
 import logging
+import click
+
+# TODO добавить аннотацию типов.
+# TODO добавить логирование ошибок в файл
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
@@ -112,14 +116,14 @@ def generate_config(ovpn_folder, crt_dict, ca_path, ta_path):
     log.info(f"Generation config - files .ovpn complete")
 
 
-def main():
-    cer_folder_address = "C:/repos/mrdobriykot/python/open_vpn_scripts/data/crt/"
-    keys_folder_address = "C:/repos/mrdobriykot/python/open_vpn_scripts/data/key/"
-    ovpn_path = "C:/repos/mrdobriykot/python/open_vpn_scripts/data/ovpn/"
+@click.command()
+@click.option("--cer_folder_address", "-cfa", prompt=True)
+@click.option("--keys_folder_address", "-kfa", prompt=True)
+@click.option("--ovpn_path", "-opath", prompt=True)
+@click.option("--ca_path", "-capath", prompt=True)
+@click.option("--ta_path", "-tapath", prompt=True)
+def main(cer_folder_address, keys_folder_address, ovpn_path, ca_path, ta_path):
     crt_dict = get_crt_key_dict(cer_folder_address, keys_folder_address, ovpn_path)
-
-    ca_path = "C:/repos/mrdobriykot/python/open_vpn_scripts/data/ca.crt"
-    ta_path = "C:/repos/mrdobriykot/python/open_vpn_scripts/data/ta.key"
     generate_config(ovpn_path, crt_dict, ca_path, ta_path)
 
 
